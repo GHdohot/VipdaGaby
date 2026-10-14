@@ -7,6 +7,7 @@
     <meta name="description" content="Perfil oficial de Gaby Nunes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
     <title>Perfil - Gaby Nunes</title>
 
     <script>
@@ -21,30 +22,35 @@
                 buttonLabel: "Conteúdo Exclusivo",
                 footer: "Todos os direitos reservados a Gaby Nunes,<br class=\"footer-break\">qualquer vazamento de imagens<br class=\"footer-break\">pessoais é considerado crime sob<br class=\"footer-break\">Código Penal (Decreto-Lei 2.848, de 1940)."
             },
+
             en: {
                 pageTitle: "Profile - Gaby Nunes",
                 description: "To access the exclusive area, simply click the button below:",
                 buttonLabel: "Exclusive Content",
                 footer: "All rights reserved to Gaby Nunes,<br class=\"footer-break\">any leak of personal images<br class=\"footer-break\">is considered a crime under<br class=\"footer-break\">the Brazilian Penal Code (Decree-Law 2,848 of 1940)."
             },
+
             es: {
                 pageTitle: "Perfil - Gaby Nunes",
                 description: "Para acceder al entorno exclusivo, solo tienes que hacer clic en el botón de abajo:",
                 buttonLabel: "Contenido Exclusivo",
                 footer: "Todos los derechos reservados a Gaby Nunes,<br class=\"footer-break\">cualquier filtración de imágenes<br class=\"footer-break\">personales se considera un delito según<br class=\"footer-break\">el Código Penal brasileño (Decreto-Ley 2.848 de 1940)."
             },
+
             fr: {
                 pageTitle: "Profil - Gaby Nunes",
                 description: "Pour accéder à l'espace exclusif, cliquez simplement sur le bouton ci-dessous :",
                 buttonLabel: "Contenu Exclusif",
                 footer: "Tous les droits réservés à Gaby Nunes,<br class=\"footer-break\">toute fuite d'images personnelles<br class=\"footer-break\">est considérée comme un crime selon<br class=\"footer-break\">le Code pénal brésilien (décret-loi 2 848 de 1940)."
             },
+
             de: {
                 pageTitle: "Profil - Gaby Nunes",
                 description: "Um zum exklusiven Bereich weitergeleitet zu werden, klicke einfach auf die Schaltfläche unten:",
                 buttonLabel: "Exklusive Inhalte",
                 footer: "Alle Rechte vorbehalten für Gaby Nunes,<br class=\"footer-break\">jede Weitergabe persönlicher Bilder<br class=\"footer-break\">gilt gemäß dem brasilianischen<br class=\"footer-break\">Strafgesetzbuch als Straftat."
             },
+
             it: {
                 pageTitle: "Profilo - Gaby Nunes",
                 description: "Per accedere all'ambiente esclusivo, fai clic sul pulsante qui sotto:",
@@ -108,8 +114,9 @@
             .find((language) => translations[language]) || "en";
 
         const browserCountry =
-            browserLocales[0].match(/[-_]([a-z]{2})(?:$|[-_])/i)?.[1]?.toUpperCase()
-            || null;
+            browserLocales[0]
+                .match(/[-_]([a-z]{2})(?:$|[-_])/i)?.[1]
+                ?.toUpperCase() || null;
 
         const applyTranslations = (language) => {
             const selected = translations[language] || translations.en;
@@ -132,14 +139,18 @@
             ).innerHTML = selected.footer;
         };
 
-        const validCountry = (value) =>
-            typeof value === "string" && /^[A-Z]{2}$/.test(value)
+        const validCountry = (value) => {
+            return typeof value === "string" && /^[A-Z]{2}$/.test(value)
                 ? value
                 : null;
+        };
 
         const fetchCountry = async (url, field, timeoutMs) => {
             const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+            const timeout = setTimeout(() => {
+                controller.abort();
+            }, timeoutMs);
 
             try {
                 const response = await fetch(url, {
@@ -147,11 +158,15 @@
                     cache: "no-store"
                 });
 
-                if (!response.ok) return null;
+                if (!response.ok) {
+                    return null;
+                }
 
                 const data = await response.json();
 
-                if (data.success === false) return null;
+                if (data.success === false) {
+                    return null;
+                }
 
                 return validCountry(data[field]);
             } catch (_) {
@@ -161,18 +176,23 @@
             }
         };
 
-        const detectCountry = async () =>
-            await fetchCountry(
-                "https://ipwho.is/",
-                "country_code",
-                3000
-            )
-            || await fetchCountry(
-                "https://ipapi.co/json/",
-                "country_code",
-                3000
-            )
-            || browserCountry;
+        const detectCountry = async () => {
+            return (
+                await fetchCountry(
+                    "https://ipwho.is/",
+                    "country_code",
+                    3000
+                )
+                ||
+                await fetchCountry(
+                    "https://ipapi.co/json/",
+                    "country_code",
+                    3000
+                )
+                ||
+                browserCountry
+            );
+        };
 
         window.addEventListener("DOMContentLoaded", async () => {
             const telegramLink =
@@ -220,6 +240,7 @@
         body {
             width: 100%;
             height: 100%;
+
             font-family:
                 -apple-system,
                 BlinkMacSystemFont,
@@ -229,23 +250,25 @@
                 Ubuntu,
                 Cantarell,
                 sans-serif;
+
             background: linear-gradient(
                 135deg,
                 #fff0f6 0%,
                 #ffd6e7 48%,
                 #f8b6d2 100%
             );
+
             background-attachment: fixed;
             overflow: hidden;
         }
 
         body {
             display: flex;
+            min-height: 100vh;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 1rem 0.75rem 6rem;
-            min-height: 100vh;
         }
 
         .bg-decorative-1,
@@ -260,11 +283,13 @@
             left: 0;
             width: 10rem;
             height: 10rem;
+
             background: radial-gradient(
                 circle,
                 rgba(255, 255, 255, 0.7) 0%,
                 transparent 70%
             );
+
             transform: translate(-2rem, -2rem);
         }
 
@@ -273,11 +298,13 @@
             bottom: 0;
             width: 11rem;
             height: 11rem;
+
             background: radial-gradient(
                 circle,
                 rgba(255, 182, 213, 0.65) 0%,
                 transparent 70%
             );
+
             transform: translate(3rem, 3rem);
         }
 
@@ -297,14 +324,11 @@
         }
 
         .profile-image {
-            display: inline-flex;
+            display: block;
             width: 7rem;
             height: 7rem;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2.25rem;
-            font-weight: 700;
+            object-fit: cover;
+            object-position: center;
             background: linear-gradient(135deg, #f9a8cc, #d81b60);
             border: 3px solid rgba(255, 255, 255, 0.8);
             border-radius: 50%;
@@ -315,11 +339,13 @@
             position: absolute;
             top: 0.125rem;
             right: 0.125rem;
+
             display: flex;
             width: 1.25rem;
             height: 1.25rem;
             align-items: center;
             justify-content: center;
+
             background: #ec6f9d;
             border: 2px solid white;
             border-radius: 50%;
@@ -386,13 +412,16 @@
             left: -100%;
             width: 100%;
             height: 100%;
+
             content: "";
+
             background: linear-gradient(
                 90deg,
                 transparent,
                 rgba(255, 255, 255, 0.4),
                 transparent
             );
+
             transition: left 0.5s;
         }
 
@@ -407,11 +436,13 @@
 
         .telegram-btn {
             color: #d95d8b;
+
             background: linear-gradient(
                 135deg,
                 rgba(255, 250, 253, 0.98),
                 rgba(255, 221, 235, 0.98)
             );
+
             box-shadow: 0 10px 26px rgba(217, 93, 139, 0.22);
             backdrop-filter: blur(4px);
             animation: cuteBounce 2.1s ease-in-out 0.8s infinite;
@@ -434,12 +465,15 @@
             right: 0;
             bottom: 0;
             left: 0;
+
             padding: 0.625rem 0.75rem;
+
             background: linear-gradient(
                 135deg,
                 rgba(217, 104, 145, 0.94),
                 rgba(239, 143, 177, 0.94)
             );
+
             border-top: 1px solid rgba(255, 255, 255, 0.45);
             backdrop-filter: blur(4px);
         }
@@ -646,13 +680,11 @@
 
     <main class="main-container">
         <div class="profile-picture-container">
-            <div
+            <img
                 class="profile-image"
-                role="img"
-                aria-label="Gaby Nunes"
+                src="gaby-nunes.jpg"
+                alt="Gaby Nunes"
             >
-                GN
-            </div>
 
             <div
                 class="verification-badge"
@@ -705,10 +737,13 @@
             <p class="footer-text" data-i18n="footer">
                 Todos os direitos reservados a Gaby Nunes,
                 <br class="footer-break">
+
                 qualquer vazamento de imagens
                 <br class="footer-break">
+
                 pessoais é considerado crime sob
                 <br class="footer-break">
+
                 Código Penal (Decreto-Lei 2.848, de 1940).
             </p>
         </div>
