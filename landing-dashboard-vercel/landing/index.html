@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090708">
+  <title>Acessos Maizdos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="landing" data-variant="control">
+  <div class="bg" aria-hidden="true">
+    <video id="bg-video" class="bg-video" muted loop playsinline preload="none" poster="bg/desktop.jpg" tabindex="-1"></video>
+    <div id="bg-slideshow" class="bg-slideshow"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <main class="profile profile--offers" aria-labelledby="title">
+    <p class="language-note" data-i18n="landingFooter">🌎 Suporte a todos os idiomas</p>
+    <div class="country-picker">
+      <label class="visually-hidden" for="country-select" data-i18n="countryLabel">Selecione seu país</label>
+      <div class="country">
+        <span class="country-flag" id="country-flag" aria-hidden="true"><img src="https://flagcdn.com/32x24/br.png" alt=""></span>
+        <select id="country-select" name="country" data-country-select></select>
+        <svg class="country__chevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <path d="m6 8 4 4 4-4"></path>
+        </svg>
+      </div>
+    </div>
+
+    <img class="brand-logo" src="assets/logo.jpg" alt="Acessos Maizdos">
+    <h1 id="title" data-i18n="promoHeadline">Seu lado mais ousado tem lugar aqui — sem julgamentos e sem fronteiras.</h1>
+    <nav class="offer-list" aria-label="Ofertas VIP">
+      <a class="offer-link offer-link--primary" id="primary-offer" href="#" data-primary-offer>
+        <span class="offer-emoji" aria-hidden="true">🔥</span>
+        <span class="offer-name">VIP <span class="offer-destination"></span></span>
+        <span class="offer-flag" aria-hidden="true"><img src="https://flagcdn.com/32x24/br.png" alt=""></span>
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m7 4 6 6-6 6"></path></svg>
+      </a>
+    </nav>
+    <footer class="landing-footer">
+      <p class="telegram-note">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21.5 4.5 18.3 19c-.24 1.03-.85 1.28-1.72.8l-4.76-3.51-2.3 2.2c-.25.25-.47.47-.96.47l.34-4.83 8.8-7.95c.38-.34-.08-.53-.59-.19L6.23 12.84l-4.67-1.46c-1.02-.32-1.04-1.02.21-1.51L20.05 3.1c.85-.31 1.6.2 1.45 1.4Z"></path></svg>
+        <span data-i18n="telegramBadge">Acesso pelo Telegram</span>
+      </p>
+    </footer>
+  </main>
+
+  <script src="deployment-config.js"></script>
+  <script src="analytics.js"></script>
+  <script src="i18n.js"></script>
+  <script src="countries.js"></script>
+  <script src="app.js"></script>
+  <script src="links.js"></script>
+
+</body>
+</html>

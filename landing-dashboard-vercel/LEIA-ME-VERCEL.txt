@@ -1,0 +1,146 @@
+LANDING + DASHBOARD — VERSÃO VERCEL
+=================================
+
+Visual preservado: mesma logo, imagens, fundos, cores, textos e estilo do painel.
+Versão independente da Cloudflare: APIs Node.js na Vercel e banco persistente Turso/libSQL.
+Os únicos dados da operação original incluídos são os DOIS LINKS solicitados:
+
+Brasil:   https://telegram.me/brasilvazadinhos2_bot
+Exterior: https://telegram.me/brasilvazadinhos3_bot
+
+Não há senha pronta, token, conta, carteira, histórico de visitas ou banco de produção.
+As duas operações do painel iniciam sem histórico e com esses destinos padrão.
+
+POR QUE A PASTA ANTERIOR NÃO BASTAVA?
+-----------------------------------
+A página pública era estática, mas as APIs e o banco eram Cloudflare Pages Functions/D1.
+A Vercel não executa essas APIs como se fossem arquivos estáticos.
+Esta versão contém o adaptador Node.js, o roteamento Vercel e o acesso ao banco externo.
+Não basta enviar apenas landing/, dashboard/ ou os HTMLs. Publique a RAIZ inteira desta pasta,
+que contém package.json, vercel.json, api/, backend/, landing/, dashboard/ e scripts/.
+
+PUBLICAR NA VERCEL
+-----------------
+1. Crie um banco NOVO no Turso e obtenha a URL do banco e um token com acesso de escrita.
+   Guia oficial: https://docs.turso.tech/sdk/ts/quickstart
+   Esses valores pertencem à sua conta; não use contas ou bancos de terceiros.
+
+2. Importe esta pasta como um repositório/projeto na Vercel, ou publique pela CLI a partir
+   desta pasta. Escolha "Other" se a Vercel pedir o framework.
+
+   O vercel.json já define:
+   - Build Command: npm run build
+   - Output Directory: public
+   - Node.js: 22.x (package.json)
+   - Rotas /api/* para a função Node.js
+
+3. Em Settings > Environment Variables, configure, no ambiente de produção:
+
+   ADMIN_PASSWORD       Sua senha do painel, com pelo menos 32 caracteres.
+   TURSO_DATABASE_URL   A URL do SEU banco Turso, normalmente libsql://...
+   TURSO_AUTH_TOKEN     Token de escrita do SEU banco.
+   SITE_ORIGIN          URL exata do site, como https://seu-projeto.vercel.app
+
+   OPERATION_ID é opcional; o padrão é primary.
+   Não use prefixo NEXT_PUBLIC_ para senha ou token: são dados apenas do backend.
+   Se mudar variáveis após publicar, faça Redeploy para aplicá-las.
+
+   SITE_ORIGIN pode ser omitido ao usar o endereço padrão e as variáveis de sistema
+   oficiais da Vercel. Para domínio personalizado, informe a URL exata explicitamente.
+   Se testar um domínio de preview com SITE_ORIGIN fixo no domínio de produção,
+   o login por esse preview será rejeitado; configure o ambiente de preview separadamente.
+
+4. Publique. O esquema inicial é criado automaticamente no banco novo na primeira consulta.
+   Também é possível executar npm run db:init com as variáveis configuradas localmente.
+   A inicialização usa CREATE IF NOT EXISTS; não apaga nem importa registros.
+
+5. Abra:
+
+   Landing: https://SEU-DOMINIO/
+   Painel:  https://SEU-DOMINIO/dashboard/admin.html
+
+   Atalhos /admin e /dashboard também apontam para o painel.
+   Não há usuário: o login usa apenas ADMIN_PASSWORD.
+
+Se usar a CLI, instale npm/Vercel e execute na raiz desta pasta:
+
+   npm install
+   npx vercel
+
+Vincule o projeto à sua conta, cadastre as variáveis e publique a produção:
+
+   npx vercel --prod
+
+ALTERAR OS BOTS NO PAINEL
+------------------------
+Operação Principal > Rotas e links:
+
+- Deixe o "Link de redirecionamento" geral vazio para separar Brasil/exterior.
+- "Brasil · BR": bot dos brasileiros.
+- "Exterior · todos os países fora do Brasil": bot para TODOS os demais países.
+- Clique em Salvar rotas.
+
+O campo exterior usa a chave técnica US internamente, mas vale para qualquer país != BR.
+O dashboard mostra os destinos efetivos. Se preencher o link geral, ele substitui ambos.
+As alterações ficam no seu Turso e sobrevivem a novos deploys.
+O país segue a seleção atual do visitante; trocar o seletor muda o idioma e o destino.
+
+TESTE LOCAL
+-----------
+Requer Node.js 22.x e npm.
+
+   npm install
+   Copie .env.example para .env.local
+
+No .env.local, configure:
+
+   ADMIN_PASSWORD=uma-senha-sua-com-pelo-menos-32-caracteres
+   TURSO_DATABASE_URL=file:.local-state/template.db
+   TURSO_AUTH_TOKEN=
+   SITE_ORIGIN=http://localhost:3000
+
+Crie a pasta .local-state e execute:
+
+   npm run dev
+
+O uso de arquivo SQLite é EXCLUSIVO para desenvolvimento no seu computador.
+Na Vercel, use o Turso remoto: arquivos locais não são um banco persistente adequado.
+O adaptador rejeita URLs file: quando executado na Vercel.
+
+Sem banco configurado, a landing ainda usa os dois links padrão.
+Para o dashboard gravar mudanças e registrar estatísticas, o banco é necessário.
+Para gerar uma senha aleatória própria:
+
+   node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"
+
+ORGANIZAÇÃO
+-----------
+landing/                 Página pública, logo, fundos e idiomas.
+dashboard/               Interface do painel.
+api/handler.js           Entrada serverless da Vercel.
+backend/router.js        Endpoints, ambiente e autenticação das rotas.
+backend/database.js      Adaptador Turso/libSQL e inicialização do esquema.
+backend/functions/       Lógica dos endpoints reutilizada no Node.js.
+database/migrations/     Esquema vazio do banco.
+scripts/                 Build, servidor local e inicialização do banco.
+public/                  Gerada por npm run build; não editar diretamente.
+
+A pasta public/ e node_modules/ não estão no ZIP: o build e npm install as geram.
+O mesmo vale para .env.local, bancos de teste e o vínculo privado .vercel/.
+Nunca publique essas credenciais no repositório.
+
+ESCOPO
+------
+Inclui dashboard, login/sessão/CSRF, configurações, analytics, sessões e exportação CSV.
+Não inclui gateways de pagamento, carteiras, webhooks ou código de bot Telegram.
+Os gráficos/tabelas de pagamento permanecem vazios até uma integração própria.
+O esquema conserva tabelas vazias para compatibilidade do dashboard.
+
+Build e fluxos principais foram testados localmente com o adaptador Node.js e libSQL.
+O deploy na conta Vercel e a conexão ao banco Turso precisam das suas configurações.
+Não foi publicado um projeto Vercel nem criado um banco Turso em conta de terceiros.
+
+Documentação técnica:
+https://vercel.com/docs/functions/runtimes/node-js
+https://vercel.com/docs/project-configuration/vercel-json
+https://tursodatabase.github.io/libsql-client-ts/
