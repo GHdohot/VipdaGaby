@@ -1,0 +1,33 @@
+LANDING ESTÁTICA — VERCEL
+========================
+Somente a landing, com o mesmo visual, logo, fundos e 19 idiomas.
+Não inclui dashboard, API, servidor, banco, senha ou painel de administração.
+Não precisa configurar Turso, Cloudflare ou variáveis de ambiente.
+
+Links já preenchidos:
+Brasil: https://telegram.me/brasilvazadinhos2_bot
+Todos os outros países: https://telegram.me/brasilvazadinhos3_bot
+
+Para alterar os destinos, edite config.js e publique novamente.
+O destino segue o país selecionado; trocar o país também troca o idioma.
+O país inicial é estimado por serviço público de IP. Se a detecção não responder,
+a seleção inicial usa a região do navegador, quando disponível, ou Brasil.
+Uma escolha manual nunca é sobrescrita por uma detecção tardia.
+O idioma segue o país, não necessariamente a preferência de idioma do navegador.
+As bandeiras vêm do FlagCDN. Não há coleta de analytics neste pacote.
+
+VERCEL
+------
+Publique esta pasta inteira, com index.html na raiz do projeto.
+Framework Preset: Other.
+Build Command: vazio (não executar npm run build).
+Output Directory: . (pasta atual).
+O vercel.json já contém essas configurações.
+Não reutilize configurações de build/variáveis da versão com dashboard.
+Se o projeto antigo insistir em compilar um framework, crie um novo projeto estático.
+Não existe npm install, package.json, Node.js ou função serverless para configurar.
+
+Teste local opcional:
+python -m http.server 8080
+Abra http://localhost:8080/.
+Para testar países específicos: /?country=BR, /?country=US, /?country=ES.
