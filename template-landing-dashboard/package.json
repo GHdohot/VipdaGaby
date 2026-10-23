@@ -1,0 +1,15 @@
+{
+  "name": "landing-dashboard-template",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && wrangler pages dev dist/site --port 8788",
+    "db:local": "wrangler d1 migrations apply landing-template --local",
+    "db:remote": "wrangler d1 migrations apply landing-template --remote",
+    "deploy": "npm run build && wrangler pages deploy dist/site --branch main"
+  },
+  "devDependencies": {
+    "wrangler": "4.151.0"
+  }
+}

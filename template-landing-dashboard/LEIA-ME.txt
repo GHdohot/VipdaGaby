@@ -1,0 +1,146 @@
+TEMPLATE — LANDING + DASHBOARD
+============================
+
+O visual, a logo, os fundos, as cores e os textos públicos foram preservados.
+Os destinos, credenciais, contas, identificadores e dados da operação foram removidos.
+Não há visitantes, leads, eventos, pedidos ou pagamentos no pacote.
+O banco incluído é somente um esquema SQL, sem registros.
+
+PASTAS
+------
+landing/              Página pública, scripts, idiomas, logo e fundos.
+dashboard/            HTML, CSS e JavaScript do painel privado.
+backend/functions/    APIs e autenticação para Cloudflare Pages Functions.
+database/migrations/  Esquema de um banco D1 novo, sem dados.
+config/               Regras HTTP e rotas das APIs.
+scripts/              Montagem dos arquivos para publicação.
+
+Os arquivos estão separados para edição, mas são publicados juntos no MESMO
+projeto Cloudflare Pages: a landing em / e o painel em /dashboard/admin.html.
+O painel depende das APIs e do D1; abrir apenas o HTML no disco não o faz funcionar.
+
+PREPARAR NO COMPUTADOR
+---------------------
+Requisitos: Node.js 20.19+ (recomendado: Node.js 22 LTS) e npm.
+
+1. Abra um terminal nesta pasta e execute:
+
+   npm install
+
+2. Copie .dev.vars.example para .dev.vars.
+   No PowerShell:
+
+   Copy-Item .dev.vars.example .dev.vars
+
+3. Gere SUA senha administrativa (mínimo de 32 caracteres):
+
+   node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+
+   Cole o resultado em ADMIN_PASSWORD= dentro de .dev.vars.
+   Não há usuário ou senha prontos neste template. Cada pessoa deve gerar os seus.
+   Preserve ENVIRONMENT=development e SITE_ORIGIN=http://localhost:8788 no teste local.
+   Não compartilhe nem publique .dev.vars.
+
+4. Crie o banco LOCAL vazio:
+
+   npm run db:local
+
+5. Inicie:
+
+   npm run dev
+
+6. Acesse:
+
+   Landing: http://localhost:8788/
+   Painel:  http://localhost:8788/dashboard/admin.html
+
+   Use localhost, conforme SITE_ORIGIN. O painel valida a origem das requisições.
+
+CONFIGURAR DOIS BOTS: BRASIL E EXTERIOR
+------------------------------------
+1. Entre no painel e selecione a operação ativa (por padrão: Principal / primary).
+2. Abra "Rotas e links".
+3. Deixe "Botão da landing > Link de redirecionamento" VAZIO.
+4. Em "Brasil · BR", informe seu bot para brasileiros.
+5. Em "Exterior · todos os países fora do Brasil", informe seu outro bot.
+6. Clique em "Salvar rotas".
+
+O campo de exterior usa a chave técnica US para manter compatibilidade com o painel.
+Qualquer país diferente de BR usa esse destino, e não apenas os Estados Unidos.
+Se preencher o link geral, ele passa a valer para ambos os públicos.
+As outras rotas e o acesso após pagamento podem permanecer vazios neste template.
+Sem destino configurado, o botão não encaminha o visitante para nenhum bot real.
+
+O país é estimado por IP; o idioma é o associado a esse país, entre 19 idiomas.
+O visitante pode mudar o país, e a tradução acompanha a seleção.
+Uma resposta tardia de geolocalização não sobrescreve uma escolha manual.
+Para conferir idiomas sem depender do IP, use /?country=BR, /?country=US ou /?country=ES.
+As duas operações do painel começam vazias e possuem configurações independentes.
+A operação publicada é definida por OPERATION_ID no arquivo wrangler.jsonc.
+Ao usar outra operação, ajuste também landing/deployment-config.js e selecione-a no painel.
+
+PUBLICAR NA SUA PRÓPRIA CLOUDFLARE
+--------------------------------
+1. Faça login na SUA conta:
+
+   npx wrangler login
+
+2. Crie SEU banco D1:
+
+   npx wrangler d1 create landing-template
+
+3. Edite wrangler.jsonc:
+
+   name: nome do SEU projeto Pages.
+   SITE_ORIGIN: URL completa do SEU site, por exemplo https://seu-projeto.pages.dev.
+   database_name: nome do banco que você criou.
+   database_id: ID retornado pela criação do SEU banco.
+
+   O UUID composto por zeros é apenas um marcador; não aponta para um banco real.
+   Se mudar o nome do banco, ajuste também os scripts db:local e db:remote do package.json.
+   Para produção, mantenha ENVIRONMENT=production.
+
+4. Crie seu projeto Pages (substitua SEU-PROJETO):
+
+   npx wrangler pages project create SEU-PROJETO --production-branch main
+
+5. Aplique o esquema no SEU banco remoto:
+
+   npm run db:remote
+
+6. Cadastre SUA senha como Secret do projeto:
+
+   npx wrangler pages secret put ADMIN_PASSWORD --project-name SEU-PROJETO
+
+   Digite a senha no prompt. Use uma senha nova, com pelo menos 32 caracteres.
+
+7. Gere e publique:
+
+   npm run deploy
+
+   Caso o CLI peça o projeto, selecione o SEU projeto Pages.
+   Selecione "main" como branch de produção.
+
+8. Entre no painel do SEU domínio e configure seus links.
+
+O build gera dist/site/ e functions/. Ambos são gerados a partir das pastas-fonte.
+Edite backend/functions/, não a pasta functions/ gerada na raiz.
+As pastas geradas, dependências e estado local não fazem parte deste pacote.
+
+ESCOPO E DEPENDÊNCIAS
+--------------------
+Inclui: landing, tradução, país automático, redirecionamento, login administrativo,
+persistência de rotas no D1, analytics, sessões, filtros e exportação CSV.
+O dashboard conserva o visual e indicadores de funil/pagamentos do painel original.
+Esses indicadores começam zerados. Este pacote não contém checkout, integração
+Stripe, carteira de criptomoedas, webhook, automação ou código de bot Telegram.
+Tabelas vazias de pedidos/pagamentos são mantidas para compatibilidade do dashboard.
+Conectar pagamentos reais exige uma integração própria.
+
+Serviços públicos utilizados: Cloudflare, Google Fonts (fontes do painel), FlagCDN
+(bandeiras) e serviços públicos de país por IP como alternativas à detecção Cloudflare.
+Os destinos dos botões são configurados exclusivamente por você.
+
+A identidade visual foi mantida conforme solicitado. Nenhuma configuração, conta,
+domínio de produção, carteira, chave, senha ou histórico da operação original acompanha
+o template. Este arquivo usa apenas exemplos e instruções genéricas.
