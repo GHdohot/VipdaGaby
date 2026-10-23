@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#110d13">
+  <title>Painel da operação · Hot Global</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="login-view" id="login-view" aria-labelledby="login-title">
+      <a class="login-brand" href="/" aria-label="Voltar à landing"><span class="brand-mark">HG</span><span>HOT GLOBAL <small>OPERAÇÕES</small></span></a>
+      <p class="eyebrow">ÁREA PRIVADA</p>
+      <h1 id="login-title">Entrar no painel</h1>
+      <p class="muted">Acompanhe as visitas, o funil e os pagamentos das duas operações.</p>
+      <form id="login-form" class="login-form">
+        <label for="admin-password">Senha administrativa</label>
+        <input id="admin-password" name="password" type="password" autocomplete="current-password" required minlength="32" maxlength="256">
+        <button class="button button--primary" type="submit">Entrar <span aria-hidden="true">→</span></button>
+        <p id="login-status" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+      <p class="login-footnote">Os dados são privados. A página não coleta nem exibe endereços IP.</p>
+    </section>
+
+    <section id="dashboard-view" class="dashboard-view" hidden>
+      <header class="topbar">
+        <a class="login-brand" href="/"><span class="brand-mark">HG</span><span>HOT GLOBAL <small>OPERAÇÕES</small></span></a>
+        <div class="operation-switch-wrap">
+          <span class="control-caption">OPERAÇÃO ATIVA</span>
+          <div class="operation-switch" role="group" aria-label="Alternar operação">
+            <button type="button" class="operation-option" data-operation="primary" aria-pressed="true"><span class="operation-option__number">01</span><span><strong>Principal</strong><small>Operação 1</small></span></button>
+            <button type="button" class="operation-option" data-operation="second" aria-pressed="false"><span class="operation-option__number">02</span><span><strong>Operação 2</strong><small>Brasil separado</small></span></button>
+          </div>
+          <input type="hidden" id="operation-select" value="primary">
+        </div>
+        <div class="topbar__controls">
+          <label class="toolbar-field"><span>Período</span><select id="range-select" aria-label="Período do relatório">
+            <option value="1">Hoje</option>
+            <option value="7" selected>7 dias</option>
+            <option value="30">30 dias</option>
+            <option value="90">90 dias</option>
+          </select></label>
+          <button class="button button--quiet" type="button" id="refresh-button" aria-label="Atualizar dados">↻ <span>Atualizar</span></button>
+          <button class="button button--quiet" type="button" id="logout-button">Sair</button>
+        </div>
+      </header>
+
+      <div class="dashboard-layout">
+        <aside class="sidebar" aria-label="Navegação do painel">
+          <p class="sidebar__label">PAINEL</p>
+          <nav>
+            <button type="button" class="nav-item is-active" data-view="overview"><span aria-hidden="true">◫</span> Visão geral</button>
+            <button type="button" class="nav-item" data-view="sessions"><span aria-hidden="true">◎</span> Sessões / Leads</button>
+            <button type="button" class="nav-item" data-view="events"><span aria-hidden="true">≋</span> Atividade</button>
+            <button type="button" class="nav-item" data-view="routes"><span aria-hidden="true">↗</span> Rotas e links</button>
+          </nav>
+          <div class="sidebar__privacy"><span class="privacy-dot"></span> Analytics ativo<br><small>IP não armazenado</small></div>
+        </aside>
+
+        <div class="main-content">
+          <div class="page-heading">
+            <div><p class="eyebrow">CENTRAL DE CONTROLE</p><h1 id="page-title">Visão geral</h1><p id="page-subtitle" class="muted">Acompanhe a jornada da visita ao pagamento.</p></div>
+            <span class="active-operation-badge" id="active-operation-badge">01 · PRINCIPAL</span>
+            <button class="button button--outline" id="export-button" type="button">Exportar CSV</button>
+          </div>
+
+          <p id="dashboard-status" class="dashboard-status" role="status" aria-live="polite"></p>
+
+          <section class="view-panel" id="view-overview" aria-label="Visão geral da operação">
+            <div class="metric-grid" id="metric-grid" aria-live="polite">
+              <article class="metric"><span>Sessões</span><strong data-metric="sessions">—</strong><small>visitas únicas</small></article>
+              <article class="metric"><span>Visualizações</span><strong data-metric="pageViews">—</strong><small>páginas abertas</small></article>
+              <article class="metric"><span>Cliques em ofertas</span><strong data-metric="offerClicks">—</strong><small>saídas para ofertas</small></article>
+              <article class="metric"><span>Checkouts criados</span><strong data-metric="paymentOrders">—</strong><small><span data-metric="pendingOrders">—</span> aguardando</small></article>
+              <article class="metric metric--accent"><span>Pagamentos confirmados</span><strong data-metric="paidOrders">—</strong><small>US$ <span data-metric="grossUsd">0.00</span> bruto</small></article>
+              <article class="metric"><span>Conversão em compra</span><strong><span data-metric="conversionRate">0</span><i>%</i></strong><small>sessões → pagamentos</small></article>
+            </div>
+
+            <div class="section-heading"><div><h2>Funil da operação</h2><p>Eventos de navegação e interação da landing page.</p></div></div>
+            <section class="funnel" aria-label="Conversão por etapa">
+              <div class="funnel-step"><span>Visita</span><strong data-funnel="sessions">—</strong><div class="funnel-track"><span data-funnel-bar="sessions"></span></div></div>
+              <div class="funnel-step"><span>Clique em oferta</span><strong data-funnel="offerClicks">—</strong><div class="funnel-track"><span data-funnel-bar="offerClicks"></span></div></div>
+              <div class="funnel-step"><span>Checkout</span><strong data-funnel="paymentOrders">—</strong><div class="funnel-track"><span data-funnel-bar="paymentOrders"></span></div></div>
+              <div class="funnel-step funnel-step--paid"><span>Pago</span><strong data-funnel="paidOrders">—</strong><div class="funnel-track"><span data-funnel-bar="paidOrders"></span></div></div>
+            </section>
+
+            <div class="data-grid">
+              <section class="data-section data-section--wide"><div class="section-heading"><div><h2>Atividade ao longo do tempo</h2><p>Sessões, cliques e checkouts por dia.</p></div></div><div id="trend-chart" class="trend-chart" role="img" aria-label="Gráfico de sessões, cliques e checkouts"></div><div class="chart-legend"><span><i class="legend-dot legend-dot--visits"></i> Sessões</span><span><i class="legend-dot legend-dot--clicks"></i> Cliques</span><span><i class="legend-dot legend-dot--checkouts"></i> Checkouts</span></div></section>
+              <section class="data-section"><div class="section-heading"><div><h2>Países</h2><p>País selecionado ou estimado.</p></div></div><div id="country-breakdown" class="breakdown-list"></div></section>
+              <section class="data-section"><div class="section-heading"><div><h2>Origem do tráfego</h2><p>UTM ou domínio de referência.</p></div></div><div id="source-breakdown" class="breakdown-list"></div></section>
+              <section class="data-section"><div class="section-heading"><div><h2>Vendas por origem</h2><p>Pedidos atribuídos às sessões registradas.</p></div></div><div id="source-sales" class="sales-list"></div></section>
+              <section class="data-section"><div class="section-heading"><div><h2>Dispositivos</h2><p>Categorias aproximadas.</p></div></div><div id="device-breakdown" class="breakdown-list"></div></section>
+              <section class="data-section"><div class="section-heading"><div><h2>Idiomas</h2><p>Idioma da página no momento da visita.</p></div></div><div id="language-breakdown" class="breakdown-list"></div></section>
+              <section class="data-section"><div class="section-heading"><div><h2>Botões e ofertas clicados</h2><p>Leads únicos que clicaram em cada entrada.</p></div></div><div id="offer-breakdown" class="breakdown-list"></div></section>
+              <section class="data-section"><div class="section-heading"><div><h2>Métodos de pagamento</h2><p>Leads que escolheram cripto ou cartão.</p></div></div><div id="payment-method-breakdown" class="breakdown-list"></div></section>
+              <section class="data-section"><div class="section-heading"><div><h2>Ativos recebidos</h2><p>Pedidos confirmados.</p></div></div><div id="asset-breakdown" class="breakdown-list"></div></section>
+              <section class="data-section data-section--wide"><div class="section-heading"><div><h2>Pagamento por país</h2><p>De quais países vieram as escolhas de cripto e cartão.</p></div></div><div class="table-wrap"><table><thead><tr><th>País</th><th>Cripto</th><th>Cartão</th><th>Total</th></tr></thead><tbody id="payment-country-body"></tbody></table></div></section>
+              <section class="data-section data-section--wide"><div class="section-heading"><div><h2>Funil por botão / oferta</h2><p>Do clique inicial à escolha do pagamento e à criação do pedido cripto.</p></div></div><div class="table-wrap"><table><thead><tr><th>Botão / oferta</th><th>Leads</th><th>Escolheram cripto</th><th>Escolheram cartão</th><th>Pedidos cripto</th></tr></thead><tbody id="offer-funnel-body"></tbody></table></div></section>
+            </div>
+
+            <section class="data-section campaigns-section">
+              <div class="section-heading"><div><h2>Desempenho das campanhas</h2><p>Compare perfil, posicionamento e criativo pelos parâmetros UTM.</p></div></div>
+              <div class="table-wrap"><table><thead><tr><th>Origem</th><th>Posicionamento</th><th>Perfil / campanha</th><th>Conteúdo</th><th>Visitas</th><th>Cliques</th><th>Checkouts</th><th>Vendas</th></tr></thead><tbody id="campaigns-body"></tbody></table></div>
+            </section>
+
+            <section class="data-section campaigns-section">
+              <div class="section-heading"><div><h2>Comparação das variantes</h2><p>Controle direto, prévia curta e prévia completa no mesmo período.</p></div></div>
+              <div class="table-wrap"><table><thead><tr><th>Variante</th><th>Sessões</th><th>Clicaram na oferta</th><th>Escolheram pagamento</th><th>Pedidos cripto</th><th>Pagamentos</th><th>CTR</th></tr></thead><tbody id="variants-body"></tbody></table></div>
+            </section>
+
+            <section class="data-section orders-section"><div class="section-heading"><div><h2>Pedidos recentes</h2><p>Estado verificado na rede Solana.</p></div></div><div class="table-wrap"><table><thead><tr><th>Pedido</th><th>Ativo</th><th>Valor</th><th>Estado</th><th>Criado</th><th>Transação</th></tr></thead><tbody id="orders-body"></tbody></table></div></section>
+          </section>
+
+          <section class="view-panel" id="view-sessions" aria-label="Sessões anônimas da operação" hidden>
+            <section class="sessions-intro"><div><p class="eyebrow">JORNADA ANÔNIMA</p><h2>Uma linha do tempo por sessão</h2><p>Os IDs são aleatórios. País é aproximado; o tempo conta apenas quando esta aba fica visível.</p></div><label class="session-search"><span>Filtrar sessões</span><input id="session-search" type="search" placeholder="UTM, país, aparelho ou código" autocomplete="off"></label></section>
+            <section class="session-explorer">
+              <div class="section-heading"><div><h2>Sessões recentes</h2><p id="sessions-caption">Ordenadas pela atividade mais recente no período selecionado.</p></div><span class="result-count" id="session-count">0 sessões</span></div>
+              <div class="table-wrap"><table class="session-table"><thead><tr><th>Sessão / entrada</th><th>País / idioma</th><th>Dispositivo</th><th>Origem / campanha</th><th>Atividade</th><th>Tempo visível</th><th></th></tr></thead><tbody id="sessions-body"></tbody></table></div>
+              <p class="empty-state session-empty" id="sessions-empty" hidden>Nenhuma sessão encontrada neste período.</p>
+            </section>
+            <section class="session-detail" id="session-detail" hidden aria-live="polite">
+              <div class="section-heading"><div><p class="eyebrow">DETALHE DA SESSÃO</p><h2 id="session-detail-title">Sessão</h2><p id="session-detail-meta" class="muted"></p></div><button class="button button--quiet" type="button" id="close-session-detail">Fechar</button></div>
+              <div class="session-attribution" id="session-attribution"></div>
+              <ol class="event-timeline" id="session-timeline"></ol>
+              <div class="session-purchases" id="session-purchases" hidden><h3>Pedidos vinculados</h3><div id="session-orders"></div></div>
+            </section>
+          </section>
+
+          <section class="view-panel" id="view-events" aria-label="Atividade detalhada" hidden>
+            <section class="data-section"><div class="section-heading"><div><h2>Eventos recentes</h2><p>Até 300 eventos; os IDs anônimos ficam agrupados na visão Sessões.</p></div></div><div class="table-wrap"><table><thead><tr><th>Data/hora</th><th>Sessão</th><th>Evento</th><th>País</th><th>Idioma</th><th>Oferta</th><th>Detalhe</th><th>Dispositivo</th><th>Página</th><th>Origem</th><th>Posicionamento</th><th>Campanha</th><th>Conteúdo</th><th>Tempo (s)</th></tr></thead><tbody id="events-body"></tbody></table></div></section>
+          </section>
+
+          <section class="view-panel" id="view-routes" aria-label="Rotas e links da operação" hidden>
+            <section class="data-section route-map-section"><div class="section-heading"><div><h2>Para onde cada oferta leva</h2><p>Resumo dos botões da landing e dos destinos configurados para esta operação.</p></div></div>
+              <div class="table-wrap"><table><thead><tr><th>Entrada / oferta</th><th>Fluxo</th><th>Destino atual</th><th>Estado</th></tr></thead><tbody id="route-map-body"></tbody></table></div>
+              <p class="route-map-note" id="route-map-note" role="status"></p>
+            </section>
+            <section class="data-section routes-section"><div class="section-heading"><div><h2>Controlar links e destinos</h2><p>As rotas são independentes por operação e passam a valer sem novo deploy.</p></div></div>
+              <form id="routes-form">
+                <input type="hidden" name="operationId">
+                <div class="route-group"><h3>Botão da landing</h3><p>Destino aberto quando o visitante clica no botão principal.</p><label>Link de redirecionamento<input type="url" name="landingUrl" inputmode="url" autocomplete="url" placeholder="https://t.me/seu_bot"></label></div>
+                <div class="route-group"><h3>Acesso após pagamento</h3><p>Link aberto após a confirmação on-chain.</p><label>Destino do Telegram<input type="url" name="accessUrl" inputmode="url" autocomplete="url"></label></div>
+                <div class="route-group"><h3>Destino padrão</h3><label>Global<input type="url" name="global" inputmode="url"></label></div>
+                <div class="route-group"><h3>Rotas por país</h3><div class="route-grid"><label>Brasil · BR<input type="url" name="country.BR" required inputmode="url"></label><label>Índia · IN<input type="url" name="country.IN" inputmode="url"></label><label>Rússia · RU<input type="url" name="country.RU" inputmode="url"></label><label>Exterior · todos os países fora do Brasil<input type="url" name="country.US" inputmode="url"></label><label>Espanha · ES<input type="url" name="country.ES" inputmode="url"></label><label>Suécia · SE<input type="url" name="country.SE" inputmode="url"></label></div></div>
+                <div class="route-group"><h3>Rotas por região</h3><div class="route-grid"><label>América Latina<input type="url" name="region.latam" inputmode="url"></label><label>América do Norte<input type="url" name="region.na" inputmode="url"></label><label>Europa<input type="url" name="region.europe" inputmode="url"></label><label>Ásia<input type="url" name="region.asia" inputmode="url"></label><label>África<input type="url" name="region.africa" inputmode="url"></label><label>Oceania<input type="url" name="region.oceania" inputmode="url"></label></div></div>
+                <div class="route-actions"><button class="button button--primary" type="submit">Salvar rotas</button><p id="routes-status" class="form-status" role="status" aria-live="polite"></p></div>
+              </form>
+            </section>
+            <section class="privacy-details"><div class="privacy-details__icon" aria-hidden="true">◉</div><div><h2>O que este painel guarda</h2><p>Eventos de funil, país selecionado/estimado, idioma, categorias gerais de dispositivo e navegador, domínio de referência, UTMs e pedidos de pagamento. Eventos analíticos são removidos após 90 dias. Não guardamos IP, GPS, fingerprint, nome, e-mail ou o texto completo de páginas de referência.</p></div></section>
+          </section>
+
+          <footer class="dashboard-footer"><span id="last-updated">—</span><span>Dados de navegação são registrados para análise da operação; pagamentos são registrados para operar pedidos.</span></footer>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="admin.js" defer></script>
+</body>
+</html>
