@@ -1,0 +1,12 @@
+import { cp, mkdir } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+const root = fileURLToPath(new URL("../", import.meta.url));
+const site = path.join(root, "dist/site");
+await mkdir(site, { recursive: true });
+await cp(path.join(root, "landing"), site, { recursive: true });
+await cp(path.join(root, "dashboard"), path.join(site, "dashboard"), { recursive: true });
+await cp(path.join(root, "config/_headers"), path.join(site, "_headers"));
+await cp(path.join(root, "config/_routes.json"), path.join(site, "_routes.json"));
+await cp(path.join(root, "backend/functions"), path.join(root, "functions"), { recursive: true });
+console.log("Build pronto: dist/site; painel: /dashboard/admin.html");
